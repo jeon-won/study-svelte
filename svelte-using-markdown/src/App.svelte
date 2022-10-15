@@ -2,6 +2,16 @@
 	import { marked } from "marked";
 	export let name;
 
+	marked.setOptions({
+		renderer: new marked.Renderer(),
+		highlight: function(code, lang) {
+			const hljs = require('highlight.js');
+			const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+			return hljs.highlight(code, { language }).value;
+  		},
+		gfm: true,
+	});
+
 	let mark = `
 Svelte Markdown 테스트
 
@@ -21,18 +31,25 @@ _이탤릭_
 
 코드블록은 백틱 문자 3개를 연달아 사용해야 하는데, 자바스크립트 백틱 문자 안에 백틱 문자를 어떻게 표현해야 하는지 모르게씀...
 
-표는 제대로 표시 안 되네...
-
 |ㅁㄴㅇㄹ|ㅁㄴㅇㄹ|
 |------|------|
-|1-----|ㅁ-----|
+|1234|asdf|
+
+\`\`\`python
+<html>
+<head>
+\`\`\`
 `;
+
 </script>
 
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	{@html marked(mark)}
+	{@html marked(mark, {
+		gfm: true,
+		asdf: true
+	})}
 </main>
 
 <style>
